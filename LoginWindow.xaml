@@ -1,0 +1,24 @@
+﻿<Window x:Class="PRN_Project.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PRN_Project"
+        mc:Ignorable="d"
+        Title="LoginWindow" Height="450" Width="800">
+    <Grid>
+        <DockPanel VerticalAlignment="Center" Margin="10" >
+            <StackPanel Grid.Column="0" Margin="100 0 100 0" >
+                <HeaderedContentControl Content="Welcome to Trung's Warehouse" HorizontalAlignment="Center" FontSize="30" Margin="0 30"/>
+                <Label Content="User Name"/>
+                <TextBox x:Name="txtUser"/>
+
+                <Label Content="Pass Word"/>
+                <TextBox x:Name="txtPassWord"/>
+
+                <Button Content="Login" Click="Button_ClickLogin" Width="50" Margin=" 30"/>
+            </StackPanel>
+
+        </DockPanel>
+    </Grid>
+</Window>
