@@ -1,0 +1,54 @@
+﻿<Window x:Class="PRN_Project.ReceiveInfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PRN_Project"
+        mc:Ignorable="d"
+        Title="ReceiveWindow" Height="450" Width="800">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            
+            <Grid>
+                <StackPanel Margin="100 0">
+                    <TextBlock FontSize="20" Margin="0 10" Name="txtIdPhieu">Id phiếu nhập :</TextBlock>
+
+                    <Label>Tên Sản Phẩm</Label>
+                    <ComboBox Name="cbProduct" SelectedValuePath="Id" DisplayMemberPath="DisplayName"></ComboBox>
+
+                    <Label>Số lượng</Label>
+                    <TextBox Name="txtSoluong" PreviewTextInput="NumberTextBox_PreviewTextInput"></TextBox>
+
+                    <Label>Giá Nhập</Label>
+                    <TextBox Name="txtGianhap" PreviewTextInput="NumberTextBox_PreviewTextInput"></TextBox>
+                </StackPanel>
+            </Grid>                
+            
+
+        </Grid>
+        <Grid Grid.Row="1">
+            <WrapPanel HorizontalAlignment="Center" Height="auto">
+                <Button Content="Thêm" Width="70" Margin="5" Click="Button_Click_Add"></Button>
+                <Button Content="Sửa" Width="70" Margin="5" ></Button>
+                <Button Content="Xóa" Width="70" Margin="5"></Button>
+            </WrapPanel>
+        </Grid>
+        <Grid Grid.Row="2">
+            <ListView Name="lvList">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Sản phẩm" DisplayMemberBinding="{Binding IdProductNavigation.DisplayName}"></GridViewColumn>
+                        <GridViewColumn Header="Số lượng" DisplayMemberBinding="{Binding Count}"></GridViewColumn>
+                        <GridViewColumn Header="Giá Nhập" DisplayMemberBinding="{Binding InputPrice}"></GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+    </Grid>
+</Window>

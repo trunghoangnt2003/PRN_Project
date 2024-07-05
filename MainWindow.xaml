@@ -16,6 +16,7 @@
             </Grid.RowDefinitions>
             <!-- menu -->
             <Grid Grid.Row="0" Margin="5">
+                <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
                 <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent">
                     <Grid.Resources>
                         <Style TargetType="Button">
@@ -34,22 +35,22 @@
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Button ToolTip="Nhập kho" Grid.Column="0">
+                    <Button ToolTip="Nhập kho" Grid.Column="0" Click="Button_Click_5">
                         <TextBlock Text="Nhập Kho" HorizontalAlignment="Center"/>
                     </Button>
-                    <Button ToolTip="Xuất kho"  Grid.Column="1">
+                    <Button ToolTip="Xuất kho"  Grid.Column="1" Click="Button_Click_4">
                         <TextBlock Text="Xuất kho" HorizontalAlignment="Center"/>
                     </Button>
-                    <Button ToolTip="Vật tư"  Grid.Column="2">
+                    <Button ToolTip="Vật tư"  Grid.Column="2" Click="Button_Click_3">
                         <TextBlock Text="Vật tư" HorizontalAlignment="Center"/>
                     </Button>
-                    <Button ToolTip="Nhà cung cấp"  Grid.Column="3">
+                    <Button ToolTip="Nhà cung cấp"  Grid.Column="3" Click="Button_Click_2">
                         <TextBlock Text="Nhà cung cấp" HorizontalAlignment="Center"/>
                     </Button>
-                    <Button ToolTip="Đơn vị đo"  Grid.Column="4" Command="{Binding _unitCommand}">
+                    <Button ToolTip="Đơn vị đo"  Grid.Column="4" Command="{Binding _unitCommand}" Click="Button_Click_1">
                         <TextBlock Text="Đơn vị đo" HorizontalAlignment="Center"/>
                     </Button>
-                    <Button ToolTip="Nhân viên"  Grid.Column="5">
+                    <Button ToolTip="Nhân viên"  Grid.Column="5" Click="Button_Click">
                         <TextBlock Text="Nhân viên" HorizontalAlignment="Center"/>
                     </Button>
                 </Grid>
@@ -72,16 +73,22 @@
                             <ColumnDefinition Width="auto"></ColumnDefinition>
                             <ColumnDefinition Width="auto"></ColumnDefinition>
                             <ColumnDefinition Width="auto"></ColumnDefinition>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" HorizontalAlignment="Left" Width="100" Margin="5">
-                            <DatePicker/>
+                        <Grid Grid.Column="0" HorizontalAlignment="Left"  Margin="5">
+                            <TextBlock > Tìm kiếm</TextBlock>
                         </Grid>
-                        <Grid Grid.Column="1"  HorizontalAlignment="Left" Width="100" Margin="5">
-                            <DatePicker/>
+                        <Grid Grid.Column="1"  HorizontalAlignment="Left" Width="200" Margin="5">
+                            <TextBox TextChanged="TextBox_TextChanged" Name="txtTimkiem"/>
                         </Grid>
-                        <Grid Grid.Column="2" Width="100" Margin="5">
-                            <Button Content="Lọc"/>
+                        <Grid Grid.Column="2" Width="20" Margin="5">
+                            <Button Content="X"/>
                         </Grid>
+
+                        <Grid Grid.Column="3" Width="100" Margin="200 0" HorizontalAlignment="Right">
+                            <Button Content="Tải lại trang" Click="Button_Click_6"/>
+                        </Grid>
+
                     </Grid>
                     <Grid Grid.Row="1" Margin="5">
                         <Grid.ColumnDefinitions>
@@ -94,7 +101,7 @@
                                 <TextBlock Text="Tổng hàng nhập">
 
                                 </TextBlock>
-                                <TextBlock  HorizontalAlignment="Center" Name="txtHangNhap">123</TextBlock>
+                                <TextBlock  HorizontalAlignment="Center" Name="txtHangNhap"></TextBlock>
                             </StackPanel>
                             
                         </Grid>
@@ -120,12 +127,12 @@
                 </Grid>
                 <!--List-->
                 <Grid Grid.Row="1" VerticalAlignment="Stretch" Margin="5">
-                    <ListView SelectionChanged="ListView_SelectionChanged">
+                    <ListView  Name="lvList">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="STT"></GridViewColumn>
-                                <GridViewColumn Header="Tên Vật Tư"></GridViewColumn>
-                                <GridViewColumn Header="Số hàng tồn"></GridViewColumn>
+                                <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"></GridViewColumn>
+                                <GridViewColumn Header="Tên Vật Tư" DisplayMemberBinding="{Binding DisplayName}"></GridViewColumn>
+                                <GridViewColumn Header="Số hàng tồn" DisplayMemberBinding="{Binding tonKho}"></GridViewColumn>
                             </GridView>
                         </ListView.View>
                     </ListView>

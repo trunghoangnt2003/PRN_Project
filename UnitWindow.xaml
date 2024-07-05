@@ -20,18 +20,18 @@
             <Grid Grid.Row="0">
                 <StackPanel Margin="5">
                     <Label> Tên Đơn Vị Đo</Label>
-                    <TextBox Text="{Binding DisplayName}"></TextBox>
+                <TextBox Text="{Binding DisplayName,Mode=OneWay}" DataContext="{Binding ElementName=lvList, Path=SelectedItem}" Name="txtDisplayName"></TextBox>
                 </StackPanel>
             </Grid>
             <Grid Grid.Row="1">
                 <WrapPanel HorizontalAlignment="Center" Height="auto">
-                    <Button Content="Thêm" Width="70" Margin="5"></Button>
-                    <Button Content="Sửa" Width="70" Margin="5" ></Button>
-                    <Button Content="Xóa" Width="70" Margin="5"></Button>
+                    <Button Content="Thêm" Width="70" Margin="5" Click="Button_Click_Add"></Button>
+                    <Button Content="Sửa" Width="70" Margin="5" Click="Button_Click_Update" ></Button>
+                    <Button Content="Xóa" Width="70" Margin="5" Click="Button_Click_Remove"></Button>
                 </WrapPanel>
             </Grid>
             <Grid Grid.Row="2">
-                <ListView ItemsSource="{Binding List}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}">
+                <ListView Name="lvList">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"></GridViewColumn>

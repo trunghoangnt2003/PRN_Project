@@ -15,11 +15,25 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.122" />
     <PackageReference Include="Prism.Core" Version="8.1.97" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="MVVM\RelayCommand.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="DeliverInfoWindow.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Page>
     <Page Update="LoginWindow.xaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>

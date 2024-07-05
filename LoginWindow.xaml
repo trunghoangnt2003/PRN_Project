@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PRN_Project"
         mc:Ignorable="d"
         Title="LoginWindow" Height="450" Width="800">
-    <Grid>
+    <Grid Background="DarkCyan">
         <DockPanel VerticalAlignment="Center" Margin="10" >
             <StackPanel Grid.Column="0" Margin="100 0 100 0" >
                 <HeaderedContentControl Content="Welcome to Trung's Warehouse" HorizontalAlignment="Center" FontSize="30" Margin="0 30"/>
@@ -14,7 +14,7 @@
                 <TextBox x:Name="txtUser"/>
 
                 <Label Content="Pass Word"/>
-                <TextBox x:Name="txtPassWord"/>
+                <PasswordBox x:Name="txtPassWord"/>
 
                 <Button Content="Login" Click="Button_ClickLogin" Width="50" Margin=" 30"/>
             </StackPanel>

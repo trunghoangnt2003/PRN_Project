@@ -1,0 +1,55 @@
+﻿<Window x:Class="PRN_Project.UserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PRN_Project"
+        mc:Ignorable="d"
+        Title="UserWindow" Height="450" Width="800">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            
+            <Grid Grid.Column="0">
+                <StackPanel Margin="5">
+                    <Label>Tên Nhân Viên</Label>
+                    <TextBox Text="{Binding DisplayName,Mode=OneWay}" DataContext="{Binding ElementName=lvList, Path=SelectedItem}" Name="txtDisplayName"></TextBox>
+
+                    <Label>Tên đăng nhập</Label>
+                    <TextBox Text="{Binding UserName,Mode=OneWay}" DataContext="{Binding ElementName=lvList, Path=SelectedItem}" Name="txtUserName"></TextBox>
+
+                    <Label>Role</Label>
+                    <ComboBox Name="cbRole"                 DisplayMemberPath="DisplayName" 
+                SelectedValuePath="Id"></ComboBox>
+                </StackPanel>
+            </Grid>
+
+            
+
+        </Grid>
+        <Grid Grid.Row="1">
+            <WrapPanel HorizontalAlignment="Center" Height="auto">
+                <Button Content="Thêm" Width="70" Margin="5" Click="Button_Click_Add"></Button>
+                <Button Content="Sửa" Width="70" Margin="5" Click="Button_Click_Update" ></Button>
+                <Button Content="Xóa" Width="70" Margin="5" Click="Button_Click_2"></Button>
+            </WrapPanel>
+        </Grid>
+        <Grid Grid.Row="2">
+            <ListView  Name="lvList" SelectionChanged="lvList_SelectionChanged">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"></GridViewColumn>
+                        <GridViewColumn Header="Tên Nhân Viên" DisplayMemberBinding="{Binding DisplayName}"></GridViewColumn>
+                        <GridViewColumn Header="Tên Đăng Nhập" DisplayMemberBinding="{Binding UserName}"></GridViewColumn>
+                        <GridViewColumn Header="Role" DisplayMemberBinding="{Binding IdRoleNavigation.DisplayName}"></GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+    </Grid>
+</Window>

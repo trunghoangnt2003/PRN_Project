@@ -3,6 +3,7 @@ using PRN_Project.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,37 +17,45 @@ using System.Windows.Shapes;
 
 namespace PRN_Project
 {
-    /// <summary>
-    /// Interaction logic for UnitWindow.xaml
-    /// </summary>
-    public partial class UnitWindow : Window
+
+    public partial class SuplierWindow : Window
     {
-        public UnitWindow()
+        public SuplierWindow()
         {
             InitializeComponent();
             LoadData();
         }
         private void LoadData()
         {
-            lvList.ItemsSource = PrnContext.INSTANCE.Units.ToList();
+            var list = PrnContext.INSTANCE.Supliers.ToList();
+            lvList.ItemsSource = list;
         }
 
         private void Button_Click_Add(object sender, RoutedEventArgs e)
         {
-            string displayName = txtDisplayName.Text;
-            if (string.IsNullOrEmpty(displayName))
+            try
             {
-                MessageBox.Show("Không được nhập tên rỗng ! ");
-            }
-            else
-            {
-                Unit unit = new Unit();
-                unit.DisplayName = displayName;
-                PrnContext.INSTANCE.Units.Add(unit);
+                string displayName = txtDisplayName.Text;
+                string address = txtAddress.Text;
+                string phone = txtPhone.Text;
+                string email = txtEmail.Text;
+                string moreInfo = txtMoreInfo.Text;
+                DateOnly date = DateOnly.Parse(txtContractDate.Text);
+                Suplier suplier = new Suplier();
+                suplier.DisplayName = displayName;
+                suplier.Address = address;
+                suplier.Phone = phone;
+                suplier.Email = email;
+                suplier.MoreInfo = moreInfo;
+                suplier.ContractDate = date;
+                PrnContext.INSTANCE.Supliers.Add(suplier);
                 PrnContext.INSTANCE.SaveChanges();
                 LoadData();
             }
-
+            catch (FormatException ex)
+            {
+                MessageBox.Show("Ngày tháng năm không đúng định dạng");
+            }
         }
 
         private void Button_Click_Update(object sender, RoutedEventArgs e)
@@ -54,9 +63,19 @@ namespace PRN_Project
             try
             {
                 string displayName = txtDisplayName.Text;
-                if (lvList.SelectedItem is Unit selected)
+                string address = txtAddress.Text;
+                string phone = txtPhone.Text;
+                string email = txtEmail.Text;
+                string moreInfo = txtMoreInfo.Text;
+                DateOnly date = DateOnly.Parse(txtContractDate.Text);
+                if (lvList.SelectedItem is Suplier selected)
                 {
                     selected.DisplayName = displayName;
+                    selected.Address = address;
+                    selected.Phone = phone;
+                    selected.Email = email;
+                    selected.MoreInfo = moreInfo;
+                    selected.ContractDate = date;
                     if (PrnContext.INSTANCE.Entry(selected).State != EntityState.Modified)
                     {
                         PrnContext.INSTANCE.Entry(selected).State = EntityState.Modified;
@@ -77,9 +96,9 @@ namespace PRN_Project
 
         private void Button_Click_Remove(object sender, RoutedEventArgs e)
         {
-            if (lvList.SelectedItem is Unit selected)
+            if (lvList.SelectedItem is Suplier selected)
             {
-                PrnContext.INSTANCE.Units.Remove(selected);
+                PrnContext.INSTANCE.Supliers.Remove(selected);
                 PrnContext.INSTANCE.SaveChanges();
                 LoadData();
             }
