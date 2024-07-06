@@ -35,16 +35,24 @@ namespace PRN_Project
             UserLogin = PrnContext.INSTANCE.Users.FirstOrDefault((user) => user.UserName.Equals(userName) && user.Password.Equals(passWord));
             if (UserLogin != null)
             {
-                MainWindow mainWindow = new MainWindow(UserLogin);
-                mainWindow.Show();
-                this.Close();
+                if(UserLogin.IdRole == 1)
+                {
+                    MainWindow mainWindow = new MainWindow(UserLogin);
+                    mainWindow.Show();
+                    this.Close();
+                }else
+                {
+
+                    NhanVienWindow mainWindow = new NhanVienWindow(UserLogin);
+                    mainWindow.Show();
+                    this.Close();
+                }
+                
 
             }
             else
             {
-                MessageBox.Show("Sai : " + passWord);
-                Console.WriteLine(passWord);
-
+                MessageBox.Show("Sai Mật Khẩu Hoặc Tài Khoản ");
             }
 
 

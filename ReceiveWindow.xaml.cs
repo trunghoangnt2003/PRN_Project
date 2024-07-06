@@ -28,14 +28,27 @@ namespace PRN_Project
 
         public ReceiveWindow(User user  )
         {
+            _user = user;
             InitializeComponent();
+            if (user.IdRole == 2)
+            {
+                lblNhapHang.Visibility = Visibility.Collapsed;
+                txtNhapHang.Visibility = Visibility.Collapsed;
+                btDelete.Visibility = Visibility.Collapsed;
+            }
             txtUser.Text = user.DisplayName;
             LoadData();
-            _user = user;   
+   
         }
         private void LoadData()
         {
-            lvList.ItemsSource = PrnContext.INSTANCE.Receives.Include(r=>r.IdUserNavigation).ToList();
+            if (_user.IdRole == 1)
+            {
+                lvList.ItemsSource = PrnContext.INSTANCE.Receives.Include(r => r.IdUserNavigation).ToList();
+            }else
+            {
+                lvList.ItemsSource = PrnContext.INSTANCE.Receives.Include(r => r.IdUserNavigation).Where(x=>x.IdUser==_user.Id).ToList();
+            }
         }
 
         private void lvList_MouseDoubleClick(object sender, MouseButtonEventArgs e)

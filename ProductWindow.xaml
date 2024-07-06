@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PRN_Project"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="ProductWindow" Height="450" Width="800">
     <Window.Resources>
         <local:Base64ToImageConverter x:Key="Base64ToImageConverter" />

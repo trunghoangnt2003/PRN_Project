@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PRN_Project"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="ReceiveWindow" Height="450" Width="800">
     <Grid>
 
@@ -18,7 +19,7 @@
             <Grid>
                 <StackPanel Margin="100 0">
                     <TextBlock FontSize="20" Margin="0 10" Name="txtIdPhieu">Id phiếu nhập :</TextBlock>
-
+                    <TextBlock FontSize="15" Margin="0 10" Name="txtTongTien">Id phiếu nhập :</TextBlock>
                     <Label>Tên Sản Phẩm</Label>
                     <ComboBox Name="cbProduct" SelectedValuePath="Id" DisplayMemberPath="DisplayName"></ComboBox>
 
@@ -37,6 +38,7 @@
                 <Button Content="Thêm" Width="70" Margin="5" Click="Button_Click_Add"></Button>
                 <Button Content="Sửa" Width="70" Margin="5" ></Button>
                 <Button Content="Xóa" Width="70" Margin="5"></Button>
+                <Button Content="Xuất excel" Width="70" Margin="5" Click="Button_Click"></Button>
             </WrapPanel>
         </Grid>
         <Grid Grid.Row="2">

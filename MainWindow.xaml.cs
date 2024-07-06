@@ -98,8 +98,8 @@ namespace PRN_Project
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            SuplierWindow suplierWindow = new SuplierWindow();
-            suplierWindow.ShowDialog();
+            UserWindow user = new UserWindow();
+            user.ShowDialog();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -122,7 +122,8 @@ namespace PRN_Project
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            
+            DeliverWindow deliver = new DeliverWindow(User);
+            deliver.ShowDialog();
         }
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
@@ -133,7 +134,9 @@ namespace PRN_Project
 
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
+            txtTimkiem.Text = "";
             LoadData();
+            LoadTotal();
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)

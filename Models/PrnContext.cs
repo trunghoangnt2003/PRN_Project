@@ -51,10 +51,7 @@ public partial class PrnContext : DbContext
         {
             entity.ToTable("Deliver");
 
-            entity.HasOne(d => d.IdSuplierNavigation).WithMany(p => p.Delivers)
-                .HasForeignKey(d => d.IdSuplier)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Deliver_Suplier");
+          
 
             entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Delivers)
                 .HasForeignKey(d => d.IdUser)

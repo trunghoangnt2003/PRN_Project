@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PRN_Project"
         mc:Ignorable="d"
-        Title="DeliverInfoWindow" Height="450" Width="800">
+        WindowStartupLocation="CenterScreen"
+        Title="Xuất Hàng" Height="450" Width="800">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -17,43 +18,38 @@
 
             <Grid>
                 <StackPanel Margin="100 0">
-                    <Label>Tên Sản Phẩm</Label>
-                    <TextBox Text="{Binding Product.DisplayName}" DataContext="{}"></TextBox>
+                    <TextBlock FontSize="15" Margin="0 10" Name="txtIdPhieu">Id phiếu xuất :</TextBlock>
 
-                    <Label>Ngày Xuất</Label>
-                    <DatePicker Text="{Binding Receive.DateOutput}" DataContext="{}"></DatePicker>
+                    <TextBlock FontSize="15" Margin="0 10" Name="txtTongTien"></TextBlock>
+
+                    <Label>Tên Sản Phẩm</Label>
+                    <ComboBox Name="cbProduct" SelectedValuePath="Id" DisplayMemberPath="DisplayName"></ComboBox>
 
                     <Label>Số lượng</Label>
-                    <TextBox Text="{Binding Count}" ></TextBox>
+                    <TextBox Name="txtSoluong" PreviewTextInput="NumberTextBox_PreviewTextInput"></TextBox>
 
-                    <Label>Giá Xuất</Label>
-                    <TextBox Text="{Binding OutputPrice}" DataContext="{}"></TextBox>
-
-                    <Label>Trạng Thái Xuất</Label>
-                    <TextBox Text="{Binding Status}" DataContext="{}"></TextBox>
+                    <Label>Giá Bán</Label>
+                    <TextBox Name="txtGiaxuat" PreviewTextInput="NumberTextBox_PreviewTextInput"></TextBox>
                 </StackPanel>
             </Grid>
-
 
 
         </Grid>
         <Grid Grid.Row="1">
             <WrapPanel HorizontalAlignment="Center" Height="auto">
-                <Button Content="Thêm" Width="70" Margin="5"></Button>
+                <Button Content="Thêm" Width="70" Margin="5" Click="Button_Click_Add"></Button>
                 <Button Content="Sửa" Width="70" Margin="5" ></Button>
                 <Button Content="Xóa" Width="70" Margin="5"></Button>
+                <Button Content="In hóa đơn" Width="70" Margin="5" Click="PrintInvoice_Click"></Button>
             </WrapPanel>
         </Grid>
         <Grid Grid.Row="2">
-            <ListView ItemsSource="{Binding List}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}">
+            <ListView Name="lvList">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Sản phẩm" DisplayMemberBinding="{Binding Product.DisplayName}"></GridViewColumn>
-                        <GridViewColumn Header="Ngày nhập" DisplayMemberBinding="{Binding Deliver.DateOutput}"></GridViewColumn>
+                        <GridViewColumn Header="Sản phẩm" DisplayMemberBinding="{Binding IdProductNavigation.DisplayName}"></GridViewColumn>
                         <GridViewColumn Header="Số lượng" DisplayMemberBinding="{Binding Count}"></GridViewColumn>
-                        <GridViewColumn Header="Giá Xuất" DisplayMemberBinding="{Binding OutputPrice}"></GridViewColumn>
-                        <GridViewColumn Header="Trạng thái nhập" DisplayMemberBinding="{Binding Status}"></GridViewColumn>
-
+                        <GridViewColumn Header="Giá Bán" DisplayMemberBinding="{Binding OutputPrice}"></GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>

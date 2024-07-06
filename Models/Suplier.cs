@@ -19,7 +19,6 @@ public partial class Suplier
 
     public DateOnly ContractDate { get; set; }
 
-    public virtual ICollection<Deliver> Delivers { get; set; } = new List<Deliver>();
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }
