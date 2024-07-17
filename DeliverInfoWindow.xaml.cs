@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Documents;
 using System.Windows.Media;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace PRN_Project
@@ -28,38 +29,10 @@ namespace PRN_Project
     public partial class DeliverInfoWindow : Window
     {
         private Deliver _deliver;
-        private List<TonKho> listTonKho;
         public DeliverInfoWindow(Deliver deliver)
         {
             InitializeComponent();
-            var xuatKho = from p in PrnContext.INSTANCE.Products
-                          from ri in PrnContext.INSTANCE.DeliverInfos.Where(di => di.IdProduct == p.Id).DefaultIfEmpty()
-                          group new { p.Id, p.DisplayName, ri.Count } by new { p.Id, p.DisplayName } into g
-                          select new
-                          {
-                              g.Key.Id,
-                              g.Key.DisplayName,
-                              xuatKho = g.Sum(x => x.Count)
-                          };
-
-            var nhapKho = from p in PrnContext.INSTANCE.Products
-                          from ri in PrnContext.INSTANCE.ReceiveInfos.Where(di => di.IdProduct == p.Id).DefaultIfEmpty()
-                          group new { p.Id, p.DisplayName, ri.Count } by new { p.Id, p.DisplayName } into g
-                          select new
-                          {
-                              g.Key.Id,
-                              g.Key.DisplayName,
-                              nhapKho = g.Sum(x => x.Count)
-                          };
-            var tonKho = from x in xuatKho
-                         join y in nhapKho on x.Id equals y.Id
-                         select new TonKho
-                         {
-                             Id=x.Id,
-                             DisplayName=x.DisplayName,
-                             tonKho = y.nhapKho - x.xuatKho
-                         };
-            listTonKho = tonKho.ToList();
+           
             _deliver = deliver;
             txtIdPhieu.Text = "Id Phiếu Bán Hàng : " + _deliver.Id;
 
@@ -73,6 +46,14 @@ namespace PRN_Project
         {
             lvList.ItemsSource = PrnContext.INSTANCE.DeliverInfos.Where(de => de.IdDeliver == _deliver.Id).ToList();
             txtTongTien.Text = "Tổng tiền xuất hàng : " + PrnContext.INSTANCE.DeliverInfos.Where(de => de.IdDeliver == _deliver.Id).Sum(de => de.OutputPrice * de.Count);
+
+            if (_deliver.Status == true)
+            {
+                btn1.Visibility = Visibility.Collapsed;
+                btn2.Visibility = Visibility.Collapsed;
+                btn3.Visibility = Visibility.Collapsed;
+                btn4.Visibility = Visibility.Collapsed;
+            }
         }
         private void NumberTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
@@ -83,40 +64,45 @@ namespace PRN_Project
 
         private void Button_Click_Add(object sender, RoutedEventArgs e)
         {
-            if (cbProduct.SelectedItem is Product select)
+            try
             {
-                foreach(var hangTonKho in listTonKho)
+                if (cbProduct.SelectedItem is Product select)
                 {
-                    if(hangTonKho.Id == select.Id)
-                    {
-                        if(hangTonKho.tonKho < Int32.Parse(txtSoluong.Text))
-                        {
-                            MessageBox.Show("Sản phẩm này hiện tại chỉ còn " + hangTonKho.tonKho + " sản phẩm trong kho");
-                            return;
-                        }
-                    }
-                }
-                try
-                {
-                    DeliverInfo receiveInfo = new DeliverInfo();
-                    receiveInfo.IdProduct = select.Id;
-                    receiveInfo.OutputPrice = Int32.Parse(txtGiaxuat.Text);
-                    receiveInfo.Count = Int32.Parse(txtSoluong.Text);
-                    receiveInfo.IdDeliver = _deliver.Id;
-                    PrnContext.INSTANCE.DeliverInfos.Add(receiveInfo);
-                    PrnContext.INSTANCE.SaveChanges();
-                    LoadData();
-                    MessageBox.Show("Thêm sản phẩm thành công vào phiếu xuất hàng");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Lỗi định dạng trong quá trình thêm!");
-                }
 
-            }
-            else
+
+
+                    if (select.Count < Int32.Parse(txtSoluong.Text))
+                    {
+                        MessageBox.Show("Sản phẩm này hiện tại chỉ còn " + select.Count + " sản phẩm trong kho");
+                        return;
+                    }
+
+
+                    try
+                    {
+                        DeliverInfo receiveInfo = new DeliverInfo();
+                        receiveInfo.IdProduct = select.Id;
+                        receiveInfo.OutputPrice = Int32.Parse(txtGiaxuat.Text);
+                        receiveInfo.Count = Int32.Parse(txtSoluong.Text);
+                        receiveInfo.IdDeliver = _deliver.Id;
+                        PrnContext.INSTANCE.DeliverInfos.Add(receiveInfo);
+                        PrnContext.INSTANCE.SaveChanges();
+                        LoadData();
+                        MessageBox.Show("Thêm sản phẩm thành công vào phiếu xuất hàng");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi định dạng trong quá trình thêm!");
+                    }
+
+                }
+                else
+                {
+                    MessageBox.Show("Vui lòng chọn sản phẩm");
+                }
+            }catch (Exception ex)
             {
-                MessageBox.Show("Vui lòng chọn sản phẩm");
+                MessageBox.Show(ex.Message);
             }
         }
         //private void PrintInvoice_Click(object sender, RoutedEventArgs e)
@@ -166,6 +152,16 @@ namespace PRN_Project
 
         private void PrintInvoice_Click(object sender, RoutedEventArgs e)
         {
+            var list = lvList.ItemsSource as List<DeliverInfo>;
+            for (int i = 0; i < list.Count; i++)
+            {
+                var product = PrnContext.INSTANCE.Products.Where(x => x.Id == list[i].IdProduct).FirstOrDefault();
+                if (product.Count < list[i].Count)
+                {
+                    MessageBox.Show("Sản phẩm :" + product.DisplayName + "( ID : " + product.Id + ") hiện tại còn " + product.Count + " sản phẩm");
+                    return;
+                }
+            }
             // Create a PrintDialog
             PrintDialog printDialog = new PrintDialog();
             if (printDialog.ShowDialog() == true)
@@ -223,6 +219,23 @@ namespace PRN_Project
                 AddTextBlock(fixedPage, list[i].OutputPrice+"", xPosition + 300, yPosition,0);
 
                 yPosition += 30;
+                list[i].IdProductNavigation.Count -= list[i].Count;
+                if (PrnContext.INSTANCE.Entry(list[i].IdProductNavigation).State != EntityState.Modified)
+                {
+                    PrnContext.INSTANCE.Entry(list[i].IdProductNavigation).State = EntityState.Modified;
+                }
+                PrnContext.INSTANCE.SaveChanges();
+                _deliver.Status = true;
+                if (PrnContext.INSTANCE.Entry(_deliver).State != EntityState.Modified)
+                {
+                    PrnContext.INSTANCE.Entry(_deliver).State = EntityState.Modified;
+                }
+                PrnContext.INSTANCE.SaveChanges();
+
+                btn1.Visibility = Visibility.Collapsed;
+                btn2.Visibility = Visibility.Collapsed;
+                btn3.Visibility = Visibility.Collapsed;
+                btn4.Visibility = Visibility.Collapsed; 
             }
             AddTextBlock(fixedPage, "-------------------------------------------------------------------", xPosition, yPosition, 1);
 
@@ -248,6 +261,121 @@ namespace PRN_Project
             tb.FontSize = 12;
             tb.Margin = new Thickness(x, y, 0, 0);
             fixedPage.Children.Add(tb);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+            MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa đối tượng này không?",
+                                          "Xác nhận xóa",
+                                          MessageBoxButton.YesNo,
+                                          MessageBoxImage.Warning);
+
+            // Kiểm tra kết quả của hộp thoại
+            if (result == MessageBoxResult.Yes)
+            {
+                // Thực hiện hành động xóa đối tượng
+                if (lvList.SelectedItem is DeliverInfo selected)
+                {
+                    PrnContext.INSTANCE.DeliverInfos.Remove(selected);
+                    PrnContext.INSTANCE.SaveChanges();
+                    LoadData();
+                }
+                else
+                {
+                    MessageBox.Show("Không hợp lệ ! Ngưng tiến trình xóa");
+                }
+
+            }
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            try {
+                if (lvList.SelectedItem is DeliverInfo receiveInfo)
+                {
+                    receiveInfo.IdProduct = (int)cbProduct.SelectedValue;
+                    receiveInfo.OutputPrice = Int32.Parse(txtGiaxuat.Text);
+                    receiveInfo.Count = Int32.Parse(txtSoluong.Text);
+
+
+                    if (PrnContext.INSTANCE.Entry(receiveInfo).State != EntityState.Modified)
+                    {
+                        PrnContext.INSTANCE.Entry(receiveInfo).State = EntityState.Modified;
+                    }
+                    PrnContext.INSTANCE.SaveChanges();
+                    LoadData();
+                }
+                else
+                {
+                    MessageBox.Show("Không hợp lệ ! Ngưng tiến trình cập nhật");
+                }
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
+
+        }
+
+        private void cbProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(cbProduct.SelectedItem is Product product)
+            {
+                txtGiaxuat.Text = product.OutPrice.ToString();
+            }
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa đối tượng này không?",
+                                             "Xác nhận xóa",
+                                             MessageBoxButton.YesNo,
+                                             MessageBoxImage.Warning);
+
+                // Kiểm tra kết quả của hộp thoại
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Thực hiện hành động xóa đối tượng
+
+                    var DeliverInfo = PrnContext.INSTANCE.DeliverInfos.Where(x => x.IdDeliver == _deliver.Id).ToList();
+                    PrnContext.INSTANCE.DeliverInfos.RemoveRange(DeliverInfo);
+
+                    PrnContext.INSTANCE.Delivers.Remove(_deliver);
+                    PrnContext.INSTANCE.SaveChanges();
+                    DeliverWindow deliverWindow = new DeliverWindow(_deliver.IdUserNavigation);
+                    this.Close();
+                    deliverWindow.Show();
+
+
+                }
+            }catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void lvList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (lvList.SelectedItem is DeliverInfo receiveInfo)
+                {
+                    cbProduct.SelectedValue = receiveInfo.IdProduct;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

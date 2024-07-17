@@ -7,7 +7,9 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="ReceiveWindow" Height="450" Width="800">
-    
+    <Window.Resources>
+        <local:CheckConverter x:Key="CheckConverter" />
+    </Window.Resources>
     <Grid>
         
         <Grid.RowDefinitions>
@@ -40,8 +42,7 @@
         <Grid Grid.Row="1">
             <WrapPanel HorizontalAlignment="Center" Height="auto">
                 <Button Content="Thêm" Width="70" Margin="5" Click="Button_Click_Add"></Button>
-                <Button Content="Sửa" Width="70" Margin="5" ></Button>
-                <Button Content="Xóa" Width="70" Margin="5" Name="btDelete"></Button>
+                <Button Content="Xóa" Width="70" Margin="5" Name="btDelete" Click="btDelete_Click"></Button>
             </WrapPanel>
         </Grid>
         
@@ -53,6 +54,13 @@
                         <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"></GridViewColumn>
                         <GridViewColumn Header="Ngày nhập" DisplayMemberBinding="{Binding DateInput}"></GridViewColumn>
                         <GridViewColumn Header="Người nhập hàng" DisplayMemberBinding="{Binding IdUserNavigation.DisplayName}"></GridViewColumn>
+                        <GridViewColumn Header="Trạng thái">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding Status}" IsEnabled="False" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>

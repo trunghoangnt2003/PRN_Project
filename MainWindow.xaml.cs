@@ -26,68 +26,18 @@ namespace PRN_Project
         }
         private void LoadData()
         {
-            var xuatKho = from p in PrnContext.INSTANCE.Products
-                          from ri in PrnContext.INSTANCE.DeliverInfos.Where(di => di.IdProduct == p.Id).DefaultIfEmpty()
-                          group new { p.Id, p.DisplayName, ri.Count } by new { p.Id, p.DisplayName } into g
-                          select new
-                          {
-                              g.Key.Id,
-                              g.Key.DisplayName,
-                              xuatKho = g.Sum(x => x.Count)
-                          };
-
-            var nhapKho = from p in PrnContext.INSTANCE.Products
-                          from ri in PrnContext.INSTANCE.ReceiveInfos.Where(di => di.IdProduct == p.Id).DefaultIfEmpty()
-                          group new { p.Id, p.DisplayName, ri.Count } by new { p.Id, p.DisplayName } into g
-                          select new
-                          {
-                              g.Key.Id,
-                              g.Key.DisplayName,
-                              nhapKho = g.Sum(x => x.Count)
-                          };
-
-            var tonKho = from x in xuatKho
-                         join y in nhapKho on x.Id equals y.Id
-                         select new
-                         {
-                             x.Id,
-                             x.DisplayName,
-                             tonKho = y.nhapKho - x.xuatKho
-                         };
-            //products = tonKho.ToList();
-            lvList.ItemsSource = tonKho.Where(tk => tk.tonKho>0).ToList();
+            lvList.ItemsSource = PrnContext.INSTANCE.Products.Where(x=>x.Count>0).ToList();
         }
         private void LoadTotal()
         {
-            var xuatKho = from p in PrnContext.INSTANCE.Products
-                          from ri in PrnContext.INSTANCE.DeliverInfos.Where(di => di.IdProduct == p.Id).DefaultIfEmpty()
-                          group new { p.Id, p.DisplayName, ri.Count } by new { p.Id, p.DisplayName } into g
-                          select new
-                          {
-                              g.Key.Id,
-                              g.Key.DisplayName,
-                              xuatKho = g.Sum(x => x.Count)
-                          };
-            txtHangXuat.Text = xuatKho.Sum(x => x.xuatKho).ToString();
-            var nhapKho = from p in PrnContext.INSTANCE.Products
-                          from ri in PrnContext.INSTANCE.ReceiveInfos.Where(di => di.IdProduct == p.Id).DefaultIfEmpty()
-                          group new { p.Id, p.DisplayName, ri.Count } by new { p.Id, p.DisplayName } into g
-                          select new
-                          {
-                              g.Key.Id,
-                              g.Key.DisplayName,
-                              nhapKho = g.Sum(x => x.Count)
-                          };
-            txtHangNhap.Text = nhapKho.Sum(x => x.nhapKho).ToString();
-            var tonKho = from x in xuatKho
-                         join y in nhapKho on x.Id equals y.Id
-                         select new
-                         {
-                             x.Id,
-                             x.DisplayName,
-                             tonKho = y.nhapKho - x.xuatKho
-                         };
-            txtHangTonKho.Text = tonKho.Sum(x => x.tonKho).ToString();
+            
+            txtHangXuat.Text = PrnContext.INSTANCE.DeliverInfos.Where(x=>x.IdDeliverNavigation.Status == true).Sum(x=>x.Count).ToString();
+
+            txtHangTra.Text = PrnContext.INSTANCE.ReceiveInfos.Where(x => x.IdReceiveNavigation.Status == true && x.StatusReport == true).Sum(x=>x.CountReport).ToString();
+
+            txtHangNhap.Text = PrnContext.INSTANCE.ReceiveInfos.Where(x => x.IdReceiveNavigation.Status == true).Sum(x => x.Count).ToString();
+
+            txtHangTonKho.Text = PrnContext.INSTANCE.Products.Sum(x => x.Count).ToString();
         }
 
 
@@ -142,35 +92,23 @@ namespace PRN_Project
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string name = txtTimkiem.Text;
-            var xuatKho = from p in PrnContext.INSTANCE.Products
-                          from ri in PrnContext.INSTANCE.DeliverInfos.Where(di => di.IdProduct == p.Id).DefaultIfEmpty()
-                          group new { p.Id, p.DisplayName, ri.Count } by new { p.Id, p.DisplayName } into g
-                          select new
-                          {
-                              g.Key.Id,
-                              g.Key.DisplayName,
-                              xuatKho = g.Sum(x => x.Count)
-                          };
 
-            var nhapKho = from p in PrnContext.INSTANCE.Products
-                          from ri in PrnContext.INSTANCE.ReceiveInfos.Where(di => di.IdProduct == p.Id).DefaultIfEmpty()
-                          group new { p.Id, p.DisplayName, ri.Count } by new { p.Id, p.DisplayName } into g
-                          select new
-                          {
-                              g.Key.Id,
-                              g.Key.DisplayName,
-                              nhapKho = g.Sum(x => x.Count)
-                          };
 
-            var tonKho = from x in xuatKho
-                         join y in nhapKho on x.Id equals y.Id
-                         select new
-                         {
-                             x.Id,
-                             x.DisplayName,
-                             tonKho = y.nhapKho - x.xuatKho
-                         };
-            lvList.ItemsSource = tonKho.Where(tk => tk.DisplayName.Contains(name)).ToList();
+            var tonKho = PrnContext.INSTANCE.Products.ToList().Where(x => x.DisplayName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+            lvList.ItemsSource = tonKho;
+        }
+
+        private void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+            LoginWindow loginWindow = new LoginWindow();
+            this.Close();
+            loginWindow.Show();
+        }
+
+        private void Button_Click_8(object sender, RoutedEventArgs e)
+        {
+            ReportProduct reportProduct = new ReportProduct();
+            reportProduct.ShowDialog();
         }
     }
 }

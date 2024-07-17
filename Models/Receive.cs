@@ -11,6 +11,8 @@ public partial class Receive
 
     public int IdUser { get; set; }
 
+    public bool Status { get; set; }
+
     public virtual User IdUserNavigation { get; set; } = null!;
 
     public virtual ICollection<ReceiveInfo> ReceiveInfos { get; set; } = new List<ReceiveInfo>();

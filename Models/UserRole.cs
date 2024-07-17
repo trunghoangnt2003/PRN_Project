@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
 namespace PRN_Project.Models;
-
 public partial class UserRole
 {
     public int Id { get; set; }

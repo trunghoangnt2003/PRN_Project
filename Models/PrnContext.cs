@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-
 namespace PRN_Project.Models;
 
 public partial class PrnContext : DbContext
@@ -27,6 +26,7 @@ public partial class PrnContext : DbContext
 
     public virtual DbSet<ReceiveInfo> ReceiveInfos { get; set; }
 
+
     public virtual DbSet<Suplier> Supliers { get; set; }
 
     public virtual DbSet<Unit> Units { get; set; }
@@ -42,7 +42,6 @@ public partial class PrnContext : DbContext
         {
             optionsBuilder.UseSqlServer(congfig.GetConnectionString("DBContext"));
         }
-
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -50,8 +49,6 @@ public partial class PrnContext : DbContext
         modelBuilder.Entity<Deliver>(entity =>
         {
             entity.ToTable("Deliver");
-
-          
 
             entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Delivers)
                 .HasForeignKey(d => d.IdUser)
@@ -115,7 +112,10 @@ public partial class PrnContext : DbContext
                 .HasForeignKey(d => d.IdReceive)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ReceiveInfo_Receive");
+
         });
+
+
 
         modelBuilder.Entity<Suplier>(entity =>
         {

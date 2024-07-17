@@ -33,6 +33,8 @@
 
                     <Label>Nhà cung cấp</Label>
                     <ComboBox Name="cbSuplier"  SelectedValuePath="Id" DisplayMemberPath="DisplayName"></ComboBox>
+                    <Label>Giá Sản Phẩm</Label>
+                    <TextBox Text="{Binding OutPrice,Mode=OneWay}" DataContext="{Binding ElementName=lvList, Path=SelectedItem}" Name="txtGia"></TextBox>
                 </StackPanel>
             </Grid>
 
@@ -78,6 +80,7 @@
                             <GridViewColumn Header="Tên Sản Phẩm" DisplayMemberBinding="{Binding DisplayName}"></GridViewColumn>
                             <GridViewColumn Header="Đơn vị đo" DisplayMemberBinding="{Binding IdUnitNavigation.DisplayName}"></GridViewColumn>
                             <GridViewColumn Header="Nhà cung cấp" DisplayMemberBinding="{Binding IdSuplierNavigation.DisplayName}"></GridViewColumn>
+                            <GridViewColumn Header="Giá" DisplayMemberBinding="{Binding OutPrice}"></GridViewColumn>
                             <GridViewColumn Header="Ảnh">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>

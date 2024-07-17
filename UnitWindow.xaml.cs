@@ -28,7 +28,7 @@ namespace PRN_Project
         }
         private void LoadData()
         {
-            lvList.ItemsSource = PrnContext.INSTANCE.Units.ToList();
+            lvList.ItemsSource = PrnContext.INSTANCE.Units.Include(x=>x.Products).ToList();
         }
 
         private void Button_Click_Add(object sender, RoutedEventArgs e)
@@ -77,16 +77,34 @@ namespace PRN_Project
 
         private void Button_Click_Remove(object sender, RoutedEventArgs e)
         {
-            if (lvList.SelectedItem is Unit selected)
+            MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa đối tượng này không?",
+                                                      "Xác nhận xóa",
+                                                      MessageBoxButton.YesNo,
+                                                      MessageBoxImage.Warning);
+
+            // Kiểm tra kết quả của hộp thoại
+            if (result == MessageBoxResult.Yes)
             {
-                PrnContext.INSTANCE.Units.Remove(selected);
-                PrnContext.INSTANCE.SaveChanges();
-                LoadData();
+                // Thực hiện hành động xóa đối tượng
+                if (lvList.SelectedItem is Unit selected)
+                {
+                    var product = PrnContext.INSTANCE.Products.Where(x=>x.IdUnit == selected.Id).ToList();
+                    if(product.Count > 0)
+                    {
+                        MessageBox.Show("Còn sản phẩm trong kho ! Ngưng tiến trình xóa");
+                        return;
+                    }
+                    PrnContext.INSTANCE.Units.Remove(selected);
+                    PrnContext.INSTANCE.SaveChanges();
+                    LoadData();
+                }
+                else
+                {
+                    MessageBox.Show("Không hợp lệ ! Ngưng tiến trình xóa");
+                }
+
             }
-            else
-            {
-                MessageBox.Show("Không hợp lệ ! Ngưng tiến trình xóa");
-            }
+            
         }
     }
 }

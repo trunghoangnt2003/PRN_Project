@@ -27,6 +27,9 @@ namespace PRN_Project
     {
         private string _base64ImageString = null;
         private string img = null;
+
+        private string _selectedQrcode;
+
         public ProductWindow()
         {
             InitializeComponent();
@@ -67,6 +70,28 @@ namespace PRN_Project
 
             }
         }
+        private void UpdatePreviewImage(string qrcodeBase64)
+        {
+            try
+            {
+                // Convert the Base64 string to a byte array
+                byte[] imageBytes = Convert.FromBase64String(qrcodeBase64);
+
+                // Create a BitmapImage from the byte array
+                BitmapImage bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = new MemoryStream(imageBytes);
+                bitmapImage.EndInit();
+
+                // Set the Image control's Source
+                PreviewImage.Source = bitmapImage;
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that may occur during the image conversion
+                Console.WriteLine($"Error updating preview image: {ex.Message}");
+            }
+        }
 
         private void lvList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -74,6 +99,7 @@ namespace PRN_Project
             {
                 cbUnit.SelectedValue = selected.IdUnitNavigation.Id;
                 cbSuplier.SelectedValue = selected.IdSuplierNavigation.Id;
+                UpdatePreviewImage(selected.Qrcode);
             }
             else
             {
@@ -92,6 +118,7 @@ namespace PRN_Project
             product.IdSuplier = suplierId;
             product.IdUnit = unitId;
             product.Qrcode = img;
+            product.OutPrice = Int32.Parse(txtGia.Text);
             PrnContext.INSTANCE.Products.Add(product);
             PrnContext.INSTANCE.SaveChanges();
             LoadData();
@@ -107,7 +134,7 @@ namespace PRN_Project
                 selected.DisplayName = displayName;
                 selected.IdSuplier = suplierId;
                 selected.IdUnit = unitId;
-                selected.Qrcode = img;
+                selected.OutPrice = Int32.Parse(txtGia.Text);
                 if (PrnContext.INSTANCE.Entry(selected).State != EntityState.Modified)
                 {
                     PrnContext.INSTANCE.Entry(selected).State = EntityState.Modified;
@@ -123,15 +150,31 @@ namespace PRN_Project
         private void Button_Click_Remove(object sender, RoutedEventArgs e)
         {
 
-            if (lvList.SelectedItem is Product selected)
+            MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa đối tượng này không?",
+                                          "Xác nhận xóa",
+                                          MessageBoxButton.YesNo,
+                                          MessageBoxImage.Warning);
+
+            // Kiểm tra kết quả của hộp thoại
+            if (result == MessageBoxResult.Yes)
             {
-                PrnContext.INSTANCE.Products.Remove(selected);
-                PrnContext.INSTANCE.SaveChanges();
-                LoadData();
-            }
-            else
-            {
-                MessageBox.Show("Không hợp lệ ! Ngưng tiến trình xóa");
+                // Thực hiện hành động xóa đối tượng
+                if (lvList.SelectedItem is Product selected)
+                {
+                    var DeliverInfo = PrnContext.INSTANCE.DeliverInfos.Where(x => x.IdProductNavigation.Id == selected.Id).ToList();
+                    PrnContext.INSTANCE.DeliverInfos.RemoveRange(DeliverInfo);
+
+                    var ReceiveInfo = PrnContext.INSTANCE.ReceiveInfos.Where(x => x.IdProductNavigation.Id == selected.Id).ToList();
+                    PrnContext.INSTANCE.ReceiveInfos.RemoveRange(ReceiveInfo);
+                    PrnContext.INSTANCE.Products.Remove(selected);
+                    PrnContext.INSTANCE.SaveChanges();
+                    LoadData();
+                }
+                else
+                {
+                    MessageBox.Show("Không hợp lệ ! Ngưng tiến trình xóa");
+                }
+
             }
         }
 
@@ -141,7 +184,8 @@ namespace PRN_Project
             string nameProduct = txtTimkiem.Text;
             if (!string.IsNullOrEmpty(nameProduct))
             {
-                result = result.Where(p => p.DisplayName.Contains(nameProduct)).ToList();
+                result = result.Where(p => p.DisplayName.IndexOf(nameProduct, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+
             }
 
             if (result != null && cbTimkiem.SelectedValue != null)

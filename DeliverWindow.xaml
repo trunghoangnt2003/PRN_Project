@@ -29,7 +29,8 @@
 
                     <Label>Người thực hiện</Label>
                     <TextBlock Name="txtUser" Margin="10 0"></TextBlock>
-
+                    
+                    
                 </StackPanel>
             </Grid>
 
@@ -39,8 +40,7 @@
         <Grid Grid.Row="1">
             <WrapPanel HorizontalAlignment="Center" Height="auto">
                 <Button Content="Thêm" Width="70" Margin="5" Click="Button_Click"></Button>
-                <Button Content="Sửa" Width="70" Margin="5" ></Button>
-                <Button Content="Xóa" Width="70" Margin="5" Name="btXoa"></Button>
+                <Button Content="Xóa" Width="70" Margin="5" Name="btXoa" Click="btXoa_Click"></Button>
             </WrapPanel>
         </Grid>
 
@@ -52,6 +52,13 @@
                         <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"></GridViewColumn>
                         <GridViewColumn Header="Ngày nhập" DisplayMemberBinding="{Binding DateOutput}"></GridViewColumn>
                         <GridViewColumn Header="Người nhập hàng" DisplayMemberBinding="{Binding IdUserNavigation.DisplayName}"></GridViewColumn>
+                        <GridViewColumn Header="Trạng thái">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding Status}" IsEnabled="False" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>

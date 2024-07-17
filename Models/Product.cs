@@ -15,6 +15,10 @@ public partial class Product
 
     public string? Qrcode { get; set; }
 
+    public int Count { get; set; }
+
+    public double OutPrice { get; set; }
+
     public virtual ICollection<DeliverInfo> DeliverInfos { get; set; } = new List<DeliverInfo>();
 
     public virtual Suplier IdSuplierNavigation { get; set; } = null!;

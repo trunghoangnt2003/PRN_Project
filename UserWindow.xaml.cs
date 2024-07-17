@@ -30,7 +30,7 @@ namespace PRN_Project
         }
         private void LoadData()
         {
-            lvList.ItemsSource = PrnContext.INSTANCE.Users.Include(role => role.IdRoleNavigation).ToList();
+            lvList.ItemsSource = PrnContext.INSTANCE.Users.Include(role => role.IdRoleNavigation).Include(re=>re.Receives).Include(de=>de.Delivers).ToList();
         }
         private void LoadRole()
         {
@@ -99,7 +99,40 @@ namespace PRN_Project
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
+            // Hiển thị hộp thoại xác nhận
+            MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa đối tượng này không?",
+                                                      "Xác nhận xóa",
+                                                      MessageBoxButton.YesNo,
+                                                      MessageBoxImage.Warning);
 
+            // Kiểm tra kết quả của hộp thoại
+            if (result == MessageBoxResult.Yes)
+            {
+                // Thực hiện hành động xóa đối tượng
+                if (lvList.SelectedItem is User selected)
+                {
+                    foreach(Deliver deliver in selected.Delivers)
+                    {
+                        var DeliverInfo = PrnContext.INSTANCE.DeliverInfos.Where(x => x.IdDeliver == deliver.Id).ToList() ;
+                        PrnContext.INSTANCE.DeliverInfos.RemoveRange(DeliverInfo);
+                    }
+                    PrnContext.INSTANCE.Delivers.RemoveRange(selected.Delivers);
+                    foreach (Receive Receive in selected.Receives)
+                    {
+                        var ReceiveInfo = PrnContext.INSTANCE.ReceiveInfos.Where(x => x.IdReceive == Receive.Id).ToList();
+                        PrnContext.INSTANCE.ReceiveInfos.RemoveRange(ReceiveInfo);
+                    }
+                    PrnContext.INSTANCE.Receives.RemoveRange(selected.Receives);
+                    PrnContext.INSTANCE.Users.Remove(selected);
+                    PrnContext.INSTANCE.SaveChanges();
+                    LoadData();
+                }
+                else
+                {
+                    MessageBox.Show("Không hợp lệ ! Ngưng tiến trình xóa");
+                }
+
+            }
         }
     }
 }

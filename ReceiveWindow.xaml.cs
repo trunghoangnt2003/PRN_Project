@@ -67,8 +67,8 @@ namespace PRN_Project
         {
             try { 
             Receive receive = new Receive();
-            receive.DateInput =DateOnly.Parse( txtDate.Text );
-            receive.IdUser = _user.Id;
+            receive.DateInput = DateOnly.FromDateTime(DateTime.Now);
+                receive.IdUser = _user.Id;
             PrnContext.INSTANCE.Receives.Add( receive );
             PrnContext.INSTANCE.SaveChanges();
             LoadData();
@@ -78,5 +78,36 @@ namespace PRN_Project
             }
            
         }
+
+        private void btDelete_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa đối tượng này không?",
+                                          "Xác nhận xóa",
+                                          MessageBoxButton.YesNo,
+                                          MessageBoxImage.Warning);
+
+            // Kiểm tra kết quả của hộp thoại
+            if (result == MessageBoxResult.Yes)
+            {
+                // Thực hiện hành động xóa đối tượng
+                if (lvList.SelectedItem is Receive selected)
+                {
+                    var DeliverInfo = PrnContext.INSTANCE.ReceiveInfos.Where(x => x.IdReceive == selected.Id).ToList();
+                    PrnContext.INSTANCE.ReceiveInfos.RemoveRange(DeliverInfo);
+
+                    PrnContext.INSTANCE.Receives.Remove(selected);
+                    PrnContext.INSTANCE.SaveChanges();
+                    LoadData();
+                }
+                else
+                {
+                    MessageBox.Show("Không hợp lệ ! Ngưng tiến trình xóa");
+                }
+
+            }
+        }
+
+        
+    
     }
 }

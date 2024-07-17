@@ -66,12 +66,58 @@ namespace PRN_Project
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Deliver de = new Deliver();
-            de.DateOutput = DateOnly.Parse(txtDate.Text);
-            de.IdUser = _user.Id;
-            PrnContext.INSTANCE.Delivers.Add(de);
-            PrnContext.INSTANCE.SaveChanges();
-            LoadData();
+            try
+            {
+                Deliver de = new Deliver();
+                de.DateOutput = DateOnly.FromDateTime(DateTime.Now);
+                de.IdUser = _user.Id;
+                PrnContext.INSTANCE.Delivers.Add(de);
+                PrnContext.INSTANCE.SaveChanges();
+                LoadData();
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
         }
+
+        private void btXoa_Click(object sender, RoutedEventArgs e)
+        {
+            if(lvList.SelectedItem is Deliver selected1)
+            {
+                if(selected1.Status == true)
+                {
+                    MessageBox.Show("Hóa đơn này đã được xuất đi, Không thể xóa lịch sử");
+                    return;
+                }
+            }
+            MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa đối tượng này không?",
+                                          "Xác nhận xóa",
+                                          MessageBoxButton.YesNo,
+                                          MessageBoxImage.Warning);
+
+            // Kiểm tra kết quả của hộp thoại
+            if (result == MessageBoxResult.Yes)
+            {
+                // Thực hiện hành động xóa đối tượng
+                if (lvList.SelectedItem is Deliver selected)
+                {
+                    var DeliverInfo = PrnContext.INSTANCE.DeliverInfos.Where(x => x.IdDeliver == selected.Id).ToList();
+                    PrnContext.INSTANCE.DeliverInfos.RemoveRange(DeliverInfo);
+
+                    PrnContext.INSTANCE.Delivers.Remove(selected);
+                    PrnContext.INSTANCE.SaveChanges();
+                    LoadData();
+                }
+                else
+                {
+                    MessageBox.Show("Không hợp lệ ! Ngưng tiến trình xóa");
+                }
+
+            }
+        }
+
     }
 }

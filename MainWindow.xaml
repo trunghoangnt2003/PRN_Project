@@ -35,6 +35,8 @@
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Button ToolTip="Nhập kho" Grid.Column="0" Click="Button_Click_5">
                         <TextBlock Text="Nhập Kho" HorizontalAlignment="Center"/>
@@ -53,6 +55,12 @@
                     </Button>
                     <Button ToolTip="Nhân viên"  Grid.Column="5" Click="Button_Click">
                         <TextBlock Text="Nhân viên" HorizontalAlignment="Center"/>
+                    </Button>
+                    <Button ToolTip="Báo cáo"  Grid.Column="6" Click="Button_Click_8" >
+                        <TextBlock Text="Báo cáo" HorizontalAlignment="Center"/>
+                    </Button>
+                    <Button ToolTip="Đăng xuất"  Grid.Column="7" Click="Button_Click_7">
+                        <TextBlock Text="Đăng xuất" HorizontalAlignment="Center"/>
                     </Button>
                 </Grid>
             </Grid>
@@ -75,6 +83,7 @@
                             <ColumnDefinition Width="auto"></ColumnDefinition>
                             <ColumnDefinition Width="auto"></ColumnDefinition>
                             <ColumnDefinition Width="auto"></ColumnDefinition>
+                            
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" HorizontalAlignment="Left"  Margin="5">
                             <TextBlock > Tìm kiếm</TextBlock>
@@ -83,7 +92,7 @@
                             <TextBox TextChanged="TextBox_TextChanged" Name="txtTimkiem"/>
                         </Grid>
                         <Grid Grid.Column="2" Width="20" Margin="5">
-                            <Button Content="X"/>
+                            <Button Content="X" Height="20" VerticalAlignment="Top" Click="Button_Click_6"/>
                         </Grid>
 
                         <Grid Grid.Column="3" Width="100" Margin="200 0" HorizontalAlignment="Right">
@@ -93,6 +102,7 @@
                     </Grid>
                     <Grid Grid.Row="1" Margin="5">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
@@ -106,7 +116,16 @@
                             </StackPanel>
                             
                         </Grid>
-                        <Grid Grid.Column="1"  HorizontalAlignment="Center">
+                        <Grid Grid.Column="1" HorizontalAlignment="Center">
+                            <StackPanel>
+                                <TextBlock Text="Tổng hàng đã trả (không đạt chuẩn)">
+
+                                </TextBlock>
+                                <TextBlock  HorizontalAlignment="Center" Name="txtHangTra"></TextBlock>
+                            </StackPanel>
+
+                        </Grid>
+                        <Grid Grid.Column="2"  HorizontalAlignment="Center">
                             <StackPanel>
                                 <TextBlock Text="Tổng hàng xuất">
 
@@ -115,7 +134,7 @@
                             </StackPanel >
                             
                         </Grid>
-                        <Grid Grid.Column="2"  HorizontalAlignment="Center">
+                        <Grid Grid.Column="3"  HorizontalAlignment="Center">
                             <StackPanel>
                                 <TextBlock Text="Tổng hàng tồn kho">
 
@@ -133,7 +152,7 @@
                             <GridView>
                                 <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"></GridViewColumn>
                                 <GridViewColumn Header="Tên Vật Tư" DisplayMemberBinding="{Binding DisplayName}"></GridViewColumn>
-                                <GridViewColumn Header="Số hàng tồn" DisplayMemberBinding="{Binding tonKho}"></GridViewColumn>
+                                <GridViewColumn Header="Số hàng tồn" DisplayMemberBinding="{Binding Count}"></GridViewColumn>
                             </GridView>
                         </ListView.View>
                     </ListView>

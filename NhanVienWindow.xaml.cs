@@ -72,5 +72,13 @@ namespace PRN_Project
             }
             
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            LoginWindow loginWindow = new LoginWindow();
+            this.Close();
+            loginWindow.Show();
+            
+        }
     }
 }

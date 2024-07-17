@@ -15,6 +15,10 @@ public partial class ReceiveInfo
 
     public double InputPrice { get; set; }
 
+    public int? CountReport { get; set; }
+
+    public bool? StatusReport { get; set; }
+
     public virtual Product IdProductNavigation { get; set; } = null!;
 
     public virtual Receive IdReceiveNavigation { get; set; } = null!;

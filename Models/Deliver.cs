@@ -11,9 +11,9 @@ public partial class Deliver
 
     public int IdUser { get; set; }
 
+    public bool Status { get; set; }
 
     public virtual ICollection<DeliverInfo> DeliverInfos { get; set; } = new List<DeliverInfo>();
-
 
     public virtual User IdUserNavigation { get; set; } = null!;
 }

@@ -51,6 +51,8 @@
                 <Button Content="Thêm" Width="70" Margin="5" Click="Button_Click_Add"></Button>
                 <Button Content="Sửa" Width="70" Margin="5" Click="Button_Click_Update" ></Button>
                 <Button Content="Xóa" Width="70" Margin="5" Click="Button_Click_Remove"></Button>
+                <Button Content="Xuất json" Width="70" Margin="5" Click="Button_Click_3"></Button>
+<Button Content="Nhập json" Width="70" Margin="5" Click="Button_Click"></Button>
             </WrapPanel>
         </Grid>
         <Grid Grid.Row="2">

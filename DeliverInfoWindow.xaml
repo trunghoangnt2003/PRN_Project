@@ -23,13 +23,13 @@
                     <TextBlock FontSize="15" Margin="0 10" Name="txtTongTien"></TextBlock>
 
                     <Label>Tên Sản Phẩm</Label>
-                    <ComboBox Name="cbProduct" SelectedValuePath="Id" DisplayMemberPath="DisplayName"></ComboBox>
+                    <ComboBox Name="cbProduct" SelectedValuePath="Id" DisplayMemberPath="DisplayName" SelectionChanged="cbProduct_SelectionChanged"></ComboBox>
 
                     <Label>Số lượng</Label>
-                    <TextBox Name="txtSoluong" PreviewTextInput="NumberTextBox_PreviewTextInput"></TextBox>
+                    <TextBox Name="txtSoluong" PreviewTextInput="NumberTextBox_PreviewTextInput" Text="{Binding Count,Mode=OneWay}" DataContext="{Binding ElementName=lvList, Path=SelectedItem}"></TextBox>
 
                     <Label>Giá Bán</Label>
-                    <TextBox Name="txtGiaxuat" PreviewTextInput="NumberTextBox_PreviewTextInput"></TextBox>
+                    <TextBox Name="txtGiaxuat" PreviewTextInput="NumberTextBox_PreviewTextInput" IsReadOnly="True" Text="{Binding OutputPrice,Mode=OneWay}" DataContext="{Binding ElementName=lvList, Path=SelectedItem}"></TextBox>
                 </StackPanel>
             </Grid>
 
@@ -37,14 +37,15 @@
         </Grid>
         <Grid Grid.Row="1">
             <WrapPanel HorizontalAlignment="Center" Height="auto">
-                <Button Content="Thêm" Width="70" Margin="5" Click="Button_Click_Add"></Button>
-                <Button Content="Sửa" Width="70" Margin="5" ></Button>
-                <Button Content="Xóa" Width="70" Margin="5"></Button>
+                <Button Content="Thêm" Width="70" Margin="5" Click="Button_Click_Add" Name="btn1"></Button>
+                <Button Content="Sửa" Width="70" Margin="5" Click="Button_Click_1" Name="btn2"></Button>
+                <Button Content="Xóa" Width="70" Margin="5" Click="Button_Click" Name="btn3"></Button>
+                <Button Content="Hủy hóa đơn" Width="80" Margin="5" Click="Button_Click_2" Name="btn4"></Button>
                 <Button Content="In hóa đơn" Width="70" Margin="5" Click="PrintInvoice_Click"></Button>
             </WrapPanel>
         </Grid>
         <Grid Grid.Row="2">
-            <ListView Name="lvList">
+            <ListView Name="lvList" SelectionChanged="lvList_SelectionChanged">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Sản phẩm" DisplayMemberBinding="{Binding IdProductNavigation.DisplayName}"></GridViewColumn>
